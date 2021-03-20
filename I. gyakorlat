@@ -1,0 +1,70 @@
+---
+title: "Első gyakorlat"
+author: "Sebők Hunor"
+date: "18/03/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+pacman::p_load(tidyverse)
+
+knitr::opts_chunk$set(echo = FALSE)
+
+```
+
+```{r setup, include = FALSE}
+
+setwd("~/Desktop/OneDrive - Állatorvostudományi Egyetem/Biológia BSc/Második félév/Anyagok/Biomatek 2")
+
+falcon <- read.table("~/Desktop/OneDrive - Állatorvostudományi Egyetem/Biológia BSc/Második félév/Anyagok/Biomatek 2/falcon.csv", h = T, sep = ",", dec = ".")
+
+str(falcon)
+
+```
+
+```{r, hím fiókák átlalgos tömege}
+
+tomegtablazat <- falcon %>%
+  filter(!is.na(Sex))%>%
+  group_by(Sex) %>%  
+  summarise(atlagtomeg = round(mean(BodyMass), 1),
+            .groups = "drop")
+
+tomegtablazat
+                         
+```
+
+```{r, median}
+
+himmedian <- falcon %>%
+  group_by(Sex)%>%
+  summarise(himmedian = median(BodyMass), 1, .groups = "drop")
+
+himmedian
+
+```
+
+```{r, fact_YEAR}
+
+falcon$fact_Year <- factor(falcon$Year)
+
+median(falcon[falcon$fact_Year=="2008", "BodyMass"])
+
+sd(falcon[falcon$fact_Year=="2011", "BodyMass"])
+
+```
+
+```{r}
+
+table(falcon$fact_Year, falcon$Sex)
+
+tablazat <- falcon %>%
+  group_by(Sex, fact_Year) %>%
+summarise(round(mean(BodyMass, na.rm = T), 2),
+                                      .groups = "drop")
+
+tablazat
+
+boxplot(BodyMass~Sex, data = falcon)
+```
